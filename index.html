@@ -1,0 +1,52 @@
+<html>
+	<head>
+		<title>Machine Code!</title>
+		<script src="Memory.js" type="text/javascript"></script>
+		<script src="Video.js" type="text/javascript"></script>
+		<script src="Registers.js" type="text/javascript"></script>
+		<script src="Interpreter.js" type="text/javascript"></script>
+		<script type="text/javascript">
+		<!--
+		var inter = null;
+		var cactive = true;
+		function drawDisplay () {
+			if (inter) inter.video.draw();
+			setTimeout(drawDisplay, 500);
+		}
+		
+		function parseCode () {
+			var text = document.getElementById('code').value;
+			console.log(text);
+			var tokens = text.split(/\s/);
+			var code = new Uint8Array(tokens.length);
+			var j = 0;
+			for (var i = 0; i < tokens.length; i++) {
+				if (tokens[i].length > 0) {
+					var num = parseInt(tokens[i], 16);
+					code[j++] = num;
+				}
+			}
+			if (inter) {
+				inter.hlt = true;
+				inter.video.dispose();
+			}
+			inter = new Interpreter(code);
+			inter.execute();
+		}
+		
+		function loadHandler () {
+			parseCode();
+			drawDisplay();
+		}
+		-->
+		</script>
+	</head>
+	<body onload="loadHandler()">
+		<center>
+			<canvas id="canvas" width="650" height="400">Your browser currently doesn't support HTML5 to the extent that this application requires.  Please, upgrade to <a href="http://chrome.google.com">Google Chrome</a>.</canvas><br />
+			<textarea cols="29" rows="10" id="code" onfocus="cactive = false;" onblur="cactive = true">14 05 13 05 0E 00 00</textarea>
+			<br />
+			<button onclick="parseCode()">Run!</button>
+		</center>
+	</body>
+</html>
