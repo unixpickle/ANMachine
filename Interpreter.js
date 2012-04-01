@@ -30,7 +30,9 @@ Interpreter.prototype.execute = function () {
 		0x12: this.inst_bell,
 		0x13: this.inst_print,
 		0x14: this.inst_readch,
-		0x15: this.inst_halt
+		0x15: this.inst_halt,
+		0x16: this.inst_readreg,
+		0x17: this.inst_writereg
 	};
 	
 	var instruction = this.readOctet();
@@ -101,7 +103,6 @@ Interpreter.prototype.inst_write = function () {
 	} else {
 		this.mem.setValue(addr, val, 2);
 	}
-	this.regs.setRegister(reg1, val);
 }
 
 Interpreter.prototype.inst_xor = function () {
@@ -143,7 +144,7 @@ Interpreter.prototype.inst_add = function () {
 	}
 	
 	this.regs.setRegister(0, flags);
-	this.regs.setRegister(reg1, val1 + val2);
+	this.regs.setRegister(reg1, result);
 }
 
 Interpreter.prototype.inst_sub = function () {
@@ -235,7 +236,7 @@ Interpreter.prototype.inst_je = function () {
 }
 
 Interpreter.prototype.inst_bell = function () {
-	alert('BEEP!');
+	alert('BEEP: ' + JSON.stringify(this.regs.regs));
 }
 
 Interpreter.prototype.inst_print = function () {
@@ -254,6 +255,31 @@ Interpreter.prototype.inst_readch = function () {
 	}
 	this.hlt = true;
 	this.video.keyCallback = this.handleKey.bind(this);
+}
+
+Interpreter.prototype.inst_readreg = function () {
+	var reg1 = this.readOctet();
+	var reg2 = this.readOctet();
+	var addr = this.regs.getRegister(reg2);
+	var val = 0;
+	if (reg1 > 4) {
+		val = this.mem.getValue(addr, 1);
+	} else {
+		val = this.mem.getValue(addr, 2);
+	}
+	this.regs.setRegister(reg1, val);
+}
+
+Interpreter.prototype.inst_writereg = function () {
+	var reg1 = this.readOctet();
+	var reg2 = this.readOctet();
+	var val = this.regs.getRegister(reg2);
+	var addr = this.regs.getRegister(reg1);
+	if (reg2 > 4) {
+		this.mem.setValue(addr, val, 1);
+	} else {
+		this.mem.setValue(addr, val, 2);
+	}
 }
 
 Interpreter.prototype.inst_halt = function () {

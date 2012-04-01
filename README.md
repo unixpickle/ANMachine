@@ -50,4 +50,27 @@ In the following list, arguments are separated by commas. Here are the kinds of 
 	<tr><td>print</td><td>({a})</td><td>0x13</td><td>prints an ASCII character to the video memory</td></tr>
 	<tr><td>readch</td><td>({a})</td><td>0x14</td><td>reads an ASCII character from the keyboard</td></tr>
 	<tr><td>hlt</td><td>()</td><td>0x15</td><td>shuts down the system</td></tr>
+	<tr><td>readreg</td><td>({a}, {b})</td><td>0x16</td><td>writes the value at the address stored in `b` to `a`</td></tr>
+	<tr><td>writereg</td><td>({a}, {b})</td><td>0x17</td><td>writes `b` to the address stored in `a`</td></tr>
 </table>
+
+# Examples
+
+Here is a sample program that prints "type here:" and then echoes the user's key presses. Note that the # indicates a comment, and that this is not currently supported by the web app. In the event that you wish to test this code, you must remove all text after and including each #.
+
+	01 07 01 00 # increment counter in reg(7)
+	01 01 24 00 # buffer address in reg(1)
+	16 09 01	# read char into reg(9)
+	13 09		# print reg(9)
+	08 01 07	# add reg(7) to reg(1)
+	01 08 35 00 # set reg(8) to end of buffer
+	0C 01 08	# compare reg(1) and reg(8)
+	11 1D 00	# if they are equal, jump to code
+	0E 08 00	# otherwise, go back and do another character
+	# address: 0x1D
+	14 05		# read key to reg(5)
+	13 05		# print reg(5)
+	0E 1D 00	# jump to code
+	# address: 0x24
+	74 79 70 65 20 68 65 72 65 3A
+	# address: 0x35
