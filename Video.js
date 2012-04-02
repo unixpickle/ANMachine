@@ -21,7 +21,7 @@ Video.prototype.dispose = function () {
 }
 
 Video.prototype.print = function (letter) {
-	cursor = this.mem.getCursorPosition();
+	var cursor = this.mem.getCursorPosition();
 	if (letter == 8) {
 		// backspace
 		if (cursor.x == 0 && cursor.y == 0) return;
@@ -71,6 +71,11 @@ Video.prototype.draw = function () {
 	context.fillStyle = '#FFF';
 	context.strokeStyle = '#FFF';
 	context.font = this.metrics.h + 'px monospace';
+	
+	var cursor = this.mem.getCursorPosition();
+	var cx = cursor.x * this.metrics.w + 5;
+	var cy = cursor.y * this.metrics.h + this.metrics.h - 2;
+	context.fillRect(cx, cy, this.metrics.w, 2);
 	
 	for (var y = 0; y < 24; y++) {
 		for (var x = 0; x < 80; x++) {
